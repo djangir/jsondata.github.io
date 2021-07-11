@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="css.css">
+    <title>Edit single record</title>
+</head>
+
+<body>
+
+
+
+    <h1> Edit Single Record </h1>
+
+    <div id="updateee">
+    </div>
+
+
+    <script type="text/javascript">
+        idddd = location.search;
+
+        if (idddd == "") {
+            var aaa = prompt("please inter an id")
+            idddd = "?id=" + aaa;
+        } else {
+            idddd = location.search;
+        }
+
+        idddd = idddd.split("=");
+
+        idddd = parseInt(idddd[1]);
+
+
+        editrec(idddd);
+
+        // Show code
+
+        var updatedata = document.getElementById("updateee");
+
+        function editrec(valuee) {
+            valshow = valuee;
+            tdd = "";
+
+            fetch("https://gorest.co.in/public-api/users?id=" + valshow)
+                .then((data) => {
+                    return data.json()
+                })
+                .then((dataa) => {
+
+                    tdd = ` 
+<input type="text" id="id${dataa.data[0].id}" placeholder="User id" value="${dataa.data[0].id}">
+
+<input type="text" id="n${dataa.data[0].id}" placeholder="name" value="${dataa.data[0].name}">
+
+<input type="text" id="e${dataa.data[0].id}" placeholder="email" value="${dataa.data[0].email}">
+ 
+<input type="text" id="s${dataa.data[0].id}" placeholder="status" value="${dataa.data[0].status}">
+
+<input type="text" id="g${dataa.data[0].id}" placeholder="genger" value="${dataa.data[0].gender}">
+ 
+<input type="submit" id="su${dataa.data[0].id}" value="submit update" onclick="update_data(${dataa.data[0].id});">
+`
+
+                    updatedata.innerHTML = tdd;
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+        }
+
+        function update_data(idupdate) {
+            console.log(idupdate);
+
+
+            var id = document.getElementById(`id${idupdate}`);
+
+            var name = document.getElementById(`n${idupdate}`);
+
+            var email = document.getElementById(`e${idupdate}`);
+
+            var gender = document.getElementById(`g${idupdate}`);
+
+            var status = document.getElementById(`s${idupdate}`);
+
+            var dataaa = JSON.stringify({
+                id: id.value,
+                name: name.value,
+                email: email.value,
+                gender: gender.value,
+                status: status.value
+            })
+
+            console.log(dataaa)
+
+            var urll = `https://gorest.co.in/public-api/users/${idupdate}`;
+
+            fetch(urll, {
+                    method: 'PUT',
+                    body: dataaa,
+                    headers: {
+                        'Content-type': 'application/json; charset=UTF-8',
+                    },
+                })
+                .then((response) => {
+                    return response.json()
+                    console.log(response.json());
+                })
+
+            .then((json) => {
+                    alert("finel update result : " + json.data.message);
+                })
+                .catch((error) => {
+                    alert('update error')
+                })
+
+
+        }
+    </script>
+
+
+
+
+</body>
+
+</html>

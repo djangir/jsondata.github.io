@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="css.css">
+    <title>show single record</title>
+</head>
+
+<body>
+
+
+
+    <h1> Single Record </h1>
+
+    <div class="table">
+        <table cellspacing="0" border="1px solid">
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Gender</th>
+                <th>Status</th>
+            </tr>
+
+            <tr id="single_data">
+            </tr>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        idddd = location.search;
+
+        if (idddd.length <= 2) {
+            var aaa = prompt("please inter an id")
+            idddd = "?id=" + aaa;
+        } else {
+            idddd = location.search;
+        }
+
+        idddd = idddd.split("=");
+
+        idddd = parseInt(idddd[1]);
+
+        var single_data = document.getElementById("single_data");
+
+        showrec(idddd);
+
+        function showrec(valuee) {
+            valshow = valuee;
+            tdd = "";
+
+
+            fetch("https://gorest.co.in/public-api/users?id=" + valshow)
+                .then((data) => {
+                    return data.json()
+                })
+                .then((dataa) => {
+
+                    document.title = `Record :  ${dataa.data[0].name}`;
+
+                    tdd = `<td>${dataa.data[0].id}</td>
+    <td>${dataa.data[0].name} </td>
+    
+    <td>${dataa.data[0].email} </td>
+
+    <td>${dataa.data[0].gender} </td>
+
+    <td>${dataa.data[0].status} </td>
+ `;
+
+                    single_data.innerHTML = tdd;
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+        }
+    </script>
+
+
+
+
+</body>
+
+</html>
